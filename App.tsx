@@ -63,7 +63,7 @@ const Item = ({item, onPress, backgroundColor, textColor}) => (
 function App(): JSX.Element {
   console.log(useDeviceOrientation());
 
-  const [counter, setCounter] = useState<number>(0);
+  const [counter, setCounter] = useState<number>(1);
   const [selection, setSelection] = useState<string | undefined>(undefined);
   const [typeId, setTypeId] = useState<string>(DATA[0].id);
   const [type, setType] = useState<string>(DATA[0].title);
@@ -109,7 +109,7 @@ function App(): JSX.Element {
   };
 
   const onReset = () => {
-    setCounter(0);
+    setCounter(1);
     setSelection(undefined);
   };
 
@@ -169,14 +169,18 @@ function App(): JSX.Element {
 
   return (
     <SafeAreaView>
-      <View>
-        <FlatList
-          data={DATA}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          extraData={type}
-        />
-      </View>
+      {useDeviceOrientation() === 'portrait' && (
+        <View>
+          <FlatList
+            data={DATA}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            extraData={type}
+            collapsable
+            horizontal
+          />
+        </View>
+      )}
       <ScrollView style={backgroundStyle}>
         <Text style={styles.counterText}>Number: {counter}</Text>
         <View style={styles.fixToText}>
@@ -186,8 +190,7 @@ function App(): JSX.Element {
             title="Increase By 1"
           />
           <Button color="red" onPress={onReset} title="Reset" />
-        </View>
-        <View style={styles.fixToText}>
+
           <Button color="blue" onPress={onPushFetchPerson} title="Fetch" />
         </View>
         {selection && (
